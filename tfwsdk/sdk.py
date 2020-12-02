@@ -4,6 +4,7 @@ import importlib.util
 import json
 import logging
 import os
+import sys
 
 LOG = logging.getLogger(__name__)
 
@@ -15,11 +16,8 @@ class SDK:
         
     def _start(self):
         try:
-            EVENT_HANDLERS = os.getenv('TFW_EVENT_HANDLERS', None) # Path to app.py (which contains event handler functions)
-            if not EVENT_HANDLERS:
-                LOG.error('TFW_EVENT_HANDLERS environment variable is missing. Please specify the path of `app.py` (which contains event handler functions).')
-                exit(1)
-            print(f'Event handlers will be loaded from: {EVENT_HANDLERS}')
+            EVENT_HANDLERS = os.path.dirname(os.path.realpath(sys.argv[0])) + '/' + sys.argv[0] # Path to app.py (which contains event handler functions)
+            print(f'Loading event handlers from: {EVENT_HANDLERS}')
             
             # Loading the app.py functions dynamically
             # I know it's a little bit magic, but this way we can keep the app.py as clean as possible
@@ -183,7 +181,3 @@ class SDK:
         self.connector.send_message(payload)
 
 sdk = SDK()
-
-if __name__ == '__main__':
-    print('🎉 SDK STARTED 🎉')
-    sdk._start()
