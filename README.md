@@ -24,6 +24,10 @@ def on_ide_write(current_state: int, name_of_file: str, content_of_file: str):
 
 def on_terminal_command(current_state: int, executed_command: str):
     sdk.message_send('COMMAND EXECUTED: ' + executed_command)
+
+if __name__ == '__main__':
+    print('🎉 SDK STARTED 🎉')
+    sdk._start()
 ```
 
 The SDK is running in the background (with supervisor), imports your `app.py` and executes the above functions on corresponding events. Also, it provides some really useful functions to communicate with the TFW. Naming convention is based on the `app.yml` file:
