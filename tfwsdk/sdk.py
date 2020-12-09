@@ -14,7 +14,7 @@ class SDK:
         self.current_state = 0
         self.event_handlers = None
         
-    def _start(self):
+    def start(self):
         try:
             EVENT_HANDLERS = os.path.dirname(os.path.realpath(sys.argv[0])) + '/' + sys.argv[0] # Path to app.py (which contains event handler functions)
             print(f'Loading event handlers from: {EVENT_HANDLERS}')
@@ -100,6 +100,23 @@ class SDK:
         }
         self.connector.send_message(payload)
 
+    ########## STATES ##########
+
+    def step(self, state: int = 0, force: bool = False):
+        '''
+        By default it steps to the next state.
+
+        If you provide a state parameter, then the framework steps to the provided state, if it's the next one (otherwise nothing happens). 
+        You can step to it anyway by calling it with `force = True`.
+        '''
+        if not state:
+            state = self.current_state +1
+        if force:
+            payload = {'key': 'fsm.trigger', 'transition': 'to_' + str(state)}
+        else:
+            payload = {'key': 'fsm.trigger', 'transition': 'step_' + str(state)}
+        self.connector.send_message(payload)
+
     ########## DASHBOARD ##########
 
     def dashboard_layout(self, layout: str):
@@ -119,7 +136,6 @@ class SDK:
         self.connector.send_message(payload)
 
     def webservice_showUrlBar(self, value: bool):
-        key = 'frontend.dashboard'
         payload = {
             'key': 'frontend.dashboard',
             'showUrlBar': str(value)
@@ -172,6 +188,22 @@ class SDK:
         payload = {
             'key': 'frontend.ide',
             'showDeployButton': value
+        }
+        self.connector.send_message(payload)
+
+    def ide_deployButtonText(self, values: list):
+        if len(values) != 4:
+            LOG.error('"ide_deployButtonText" expects a list with 4 items')
+            return
+
+        payload = {
+            'key': 'frontend.ide',
+            'deployButtonText': {
+                'TODEPLOY':  values[0],
+                'DEPLOYED':  values[1],
+                'DEPLOYING': values[2],
+                'FAILED':    values[3]
+            }
         }
         self.connector.send_message(payload)
 
