@@ -144,7 +144,7 @@ class SDK:
 
     def webservice_reloadIframe(self):
         payload = {
-            'key': 'frontend.reloadIframe'
+            'key': 'dashboard.reloadIframe'
         }
         self.connector.send_message(payload)
 
@@ -160,7 +160,7 @@ class SDK:
     def terminal_write(self, content: str):
         payload = {
             'key': 'terminal.write',
-            'content': content
+            'command': content
         }
         self.connector.send_message(payload)
 
