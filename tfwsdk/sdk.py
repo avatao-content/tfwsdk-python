@@ -138,7 +138,7 @@ class SDK:
     def webservice_showUrlBar(self, value: bool):
         payload = {
             'key': 'frontend.dashboard',
-            'showUrlBar': str(value)
+            'showUrlBar': value
         }
         self.connector.send_message(payload)
 
