@@ -1,3 +1,4 @@
+from typing import List
 from .zmq_connector import ZMQConnector
 from tornado.ioloop import IOLoop
 import importlib.util
@@ -92,11 +93,12 @@ class SDK:
         }
         self.connector.send_message(payload)
 
-    def message_send(self, message: str):
+    def message_send(self, message: str, buttons: List[str] = []):
         payload = {
             'key': 'message.send',
             'originator': 'avataobot',
-            'message': message
+            'message': message,
+            'buttons': buttons
         }
         self.connector.send_message(payload)
 
